@@ -132,7 +132,7 @@ pd_classes = [
 ]
 ################
 model = torch.load('pd_model.pt', map_location=torch.device('cpu'))
-temp_dir = 'static\\images\\uploads'
+temp_dir = 'static/images/uploads'
 ###############
 prediction = ''
 test_images = []
@@ -148,17 +148,17 @@ disdata = json.load(f)
 
 ################
 def process():
-  t = glob.glob(temp_dir + '\\imgs\\' + "*")[0]
+  t = glob.glob(temp_dir + '/imgs/' + "*")[0]
   ###############
   image = Image.open(t)
   image.thumbnail((256, 256), Image.ANTIALIAS)
-  image.save(temp_dir + '\\temp\\temp_pic.jpg')
+  image.save(temp_dir + '/temp/temp_pic.jpg')
   ###############
   test = ImageFolder(temp_dir, transform=transforms.ToTensor())
   ###############
   sorted(os.listdir(
       temp_dir +
-      '\\temp'))  # since images in test folder are in alphabetical order
+      '/temp'))  # since images in test folder are in alphabetical order
   img, label = test[0]
   prediction = str(predict_image(img, model))
   ##############
@@ -168,7 +168,7 @@ def process():
   dissol3 = disdata[prediction][0]['solution3']
   ##############
   os.remove(t)
-  os.remove(temp_dir + '\\temp\\temp_pic.jpg')
+  os.remove(temp_dir + '/temp/temp_pic.jpg')
   ##############
   return disname, dissol1, dissol2, dissol3
 
@@ -201,7 +201,7 @@ def diseases():
 @app.route("/description")
 def description():
 
-  return render_template("description.html")
+  return render_template("Description.html")
 
 
 @app.route("/results")
@@ -209,7 +209,7 @@ def soln():
   return render_template("result.html")
 
 
-app.config["IMAGE_UPLOADS"] = ("static\\images\\uploads\\imgs")
+app.config["IMAGE_UPLOADS"] = ("static/images/uploads/imgs")
 
 
 @app.route("/products", methods=["POST", "GET"])
