@@ -1,19 +1,15 @@
 #########
-from email.mime import image
-from flask import Flask, redirect, render_template, request, redirect, jsonify, make_response
+import glob
+import json
 import os  # for working with files
-import numpy as np  # for numerical computationss
+
 import torch  # Pytorch module
 import torch.nn as nn  # for creating  neural networks
-from torch.utils.data import DataLoader  # for dataloaders
-from PIL import Image  # for checking images
-import torchvision.transforms as transforms  # for transforming images into tensors
-from torchvision.datasets import ImageFolder
 import torch.nn.functional as F
-import glob
-from datetime import datetime
-
-import json
+import torchvision.transforms as transforms  # for transforming images into tensors
+from flask import Flask, render_template, request
+from PIL import Image  # for checking images
+from torchvision.datasets import ImageFolder
 
 
 #########
@@ -185,6 +181,11 @@ def home():
   return render_template("index.html")
 
 
+@app.route("/predict", methods=["POST", "GET"])
+def predict():
+  return render_template("product.html")
+
+
 @app.route("/about")
 def about():
 
@@ -213,16 +214,15 @@ app.config["IMAGE_UPLOADS"] = ("static\\images\\uploads\\imgs")
 
 @app.route("/products", methods=["POST", "GET"])
 def products():
-  if request.method == "POST":
-    if request.files:
-      image = request.files["image"]
-      image.save(os.path.join(app.config["IMAGE_UPLOADS"], image.filename))
-      disname, dissol1, dissol2, dissol3 = process()
-      return render_template("result.html",
-                             disease=disname,
-                             solution1=dissol1,
-                             solution2=dissol2,
-                             solution3=dissol3)
+  if request.method == "POST" and request.files:
+    image = request.files["image"]
+    image.save(os.path.join(app.config["IMAGE_UPLOADS"], image.filename))
+    disname, dissol1, dissol2, dissol3 = process()
+    return render_template("result.html",
+                           disease=disname,
+                           solution1=dissol1,
+                           solution2=dissol2,
+                           solution3=dissol3)
 
   return render_template("product.html")
 
